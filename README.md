@@ -45,16 +45,14 @@ Once the modules have been loaded, you are ready
 to compile the sources into a binary file.
     
     cd optewe
-    mkdir build
-    cd build
-    cmake -DHAVE_VISUALIZE=OFF -DSAVE_RECEIVERS=OFF ..
+    make -DHAVE_VISUALIZE=OFF -DSAVE_RECEIVERS=OFF ..
     make -j8
 
 In the example above, writing vtk files used for visualization is turned off.
 Likewise, saving of a receiver file in .csv format is also disabled.
 If you prefer to turn these options on, please use the following cmake step
     
-    cmake -DHAVE_VISUALIZE=ON -DSAVE_RECEIVERS=ON ..
+    make -DHAVE_VISUALIZE=ON -DSAVE_RECEIVERS=ON
 
 The flags are interchangeable, which means that it is possible to turn
 one of the flags on and the other off.
