@@ -44,7 +44,7 @@ utilize Intel's C compiler suite and MKL):
 Once the modules have been loaded, you are ready
 to compile the sources into a binary file.
     
-    cd optewe
+    cd code
     make -DHAVE_VISUALIZE=OFF -DSAVE_RECEIVERS=OFF ..
     make -j8
 
