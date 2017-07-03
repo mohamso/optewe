@@ -1,3 +1,8 @@
+/* Author: Mohammed Sourouri <mohammed.sourouri@ntnu.no>
+ * Date: March 16, 2017
+ * Comment: A code that measures the energy consumed by a kernel.
+ */
+
 #include "nemi.h"
 
 void process_kernel_energy(hdeem::connection& con, std::vector<kernel> kernel_energy_data) {

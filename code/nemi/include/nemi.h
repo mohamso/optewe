@@ -1,5 +1,6 @@
 /* Author: Mohammed Sourouri <mohammed.sourouri@ntnu.no>
  * Date: March 16, 2017
+ * Comment: A code that measures the energy consumed by a kernel.
  */
 
 #include <hdeem_cxx.hpp>
