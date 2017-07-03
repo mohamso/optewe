@@ -25,14 +25,13 @@ for kernel in "${KERNELS[@]}"; do
     mkdir -p ${folder}
     for core in {25..12}; do
         for uncore in {25..12}; do
-            for thread in {24..7}; do
+            for thread in {24..2}; do
                 INSTRUMENTATION="-D${kernel}_TIME -D${kernel}_DVFS -D${kernel}_CORE=${core} -D${kernel}_UNCORE=${uncore} -DHDEEM"
                 sh $SLURM_SUBMIT_DIR/compile.sh "${INSTRUMENTATION}"
                 file="${kernel}_${size}_${niterations}_c${core}_u${uncore}_${thread}"
                  export OMP_NUM_THREADS=${thread}
-                 export KMP_AFFINITY="granularity=core,compact"
                  cd $SLURM_SUBMIT_DIR/../bin/
-                 ./optewe-mp ${size} ${size} ${size} ${niterations} > "$SLURM_SUBMIT_DIR/${folder}/${file}"
+                 ./optewe-mp ${size} ${size} ${size} ${niterations} ${thread} > "$SLURM_SUBMIT_DIR/${folder}/${file}"
                  cd $SLURM_SUBMIT_DIR
             done
         done
