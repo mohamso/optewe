@@ -11,31 +11,31 @@
 
 void compute_vx(real* vx, const real* __restrict__ rho, const real* __restrict__ del1,
                 const real* __restrict__ del2, const real* __restrict__ del3, const real dt,
-                const int nx_ghost, const int ny_ghost, const int nz_ghost);
+                const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads);
 
 
 void compute_vy(real* vy, const real* __restrict__ rho, const real* __restrict__ del1,
                 const real* __restrict__ del2, const real* __restrict__ del3, const real dt,
-                const int nx_ghost, const int ny_ghost, const int nz_ghost);
+                const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads);
 
 void compute_vz(real* vz, const real* __restrict__ rho, const real* __restrict__ del1,
                 const real* __restrict__ del2, const real* __restrict__ del3, const real dt,
-                const int nx_ghost, const int ny_ghost, const int nz_ghost);
+                const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads);
 
 void compute_sxy(real* sxy, const real* __restrict__ mu, const real* __restrict__ del1,
                  const real* __restrict__ del2, const real dt,
-                 const int nx_ghost, const int ny_ghost, const int nz_ghost);
+                 const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads);
 
 void compute_syz(real* syz, const real* __restrict__ mu, const real* __restrict__ del1,
                  const real* __restrict__ del2, const real dt,
-                 const int nx_ghost, const int ny_ghost, const int nz_ghost);
+                 const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads);
 
 void compute_sxz(real* sxz, const real* __restrict__ mu, const real* __restrict__ del1,
                  const real* __restrict__ del2, const real dt,
-                 const int nx_ghost, const int ny_ghost, const int nz_ghost);
+                 const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads);
 
 void compute_sxx_syy_szz(real* sxx, real* syy, real* szz, const real* __restrict__ del1,
                          const real* __restrict__ del2, const real* __restrict__ del3,
                          const real* __restrict__ lambda, const real* __restrict__ mu,  const real dt,
-                         const int nx_ghost, const int ny_ghost, const int nz_ghost);
+                         const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads);
 #endif // STEPFORWARD_H

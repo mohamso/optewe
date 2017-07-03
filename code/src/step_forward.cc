@@ -9,9 +9,9 @@
 
 void compute_vx(real* vx, const real* __restrict__ rho, const real* __restrict__ del1,
                 const real* __restrict__ del2, const real* __restrict__ del3, const real dt,
-                const int nx_ghost, const int ny_ghost, const int nz_ghost) {
+                const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads) {
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = 0; k < nz_ghost; k++) {
     for (int j = 0; j < ny_ghost; j++) {
       for (int i = 0; i < nx_ghost-1; i++) {
@@ -25,9 +25,9 @@ void compute_vx(real* vx, const real* __restrict__ rho, const real* __restrict__
 
 void compute_vy(real* vy, const real* __restrict__ rho, const real* __restrict__ del1,
                 const real* __restrict__ del2, const real* __restrict__ del3, const real dt,
-                const int nx_ghost, const int ny_ghost, const int nz_ghost) {
+                const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads) {
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = 0; k < nz_ghost; k++) {
     for (int j = 0; j < ny_ghost - 1; j++) {
       for (int i = 0; i < nx_ghost; i++) {
@@ -42,9 +42,9 @@ void compute_vy(real* vy, const real* __restrict__ rho, const real* __restrict__
 
 void compute_vz(real* vz, const real* __restrict__ rho, const real* __restrict__ del1,
                 const real* __restrict__ del2, const real* __restrict__ del3, const real dt,
-                const int nx_ghost, const int ny_ghost, const int nz_ghost) {
+                const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads) {
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = 0; k < nz_ghost - 1; k++) {
     for (int j = 0; j < ny_ghost; j++) {
       for (int i = 0; i < nx_ghost; i++) {
@@ -59,9 +59,9 @@ void compute_vz(real* vz, const real* __restrict__ rho, const real* __restrict__
 
 void compute_sxy(real* sxy, const real* __restrict__ mu, const real* __restrict__ del1,
                  const real* __restrict__ del2, const real dt,
-                 const int nx_ghost, const int ny_ghost, const int nz_ghost) {
+                 const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads) {
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = 0; k < nz_ghost; k++) {
     for (int j = 0; j < ny_ghost - 1; j++) {
       for (int i = 0; i < nx_ghost - 1; i++) {
@@ -76,9 +76,9 @@ void compute_sxy(real* sxy, const real* __restrict__ mu, const real* __restrict_
 
 void compute_syz(real* syz, const real* __restrict__ mu, const real* __restrict__ del1,
                  const real* __restrict__ del2, const real dt,
-                 const int nx_ghost, const int ny_ghost, const int nz_ghost) {
+                 const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads) {
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = 0; k < nz_ghost - 1; k++) {
     for (int j = 0; j < ny_ghost - 1; j++) {
       for (int i = 0; i < nx_ghost; i++) {
@@ -93,9 +93,9 @@ void compute_syz(real* syz, const real* __restrict__ mu, const real* __restrict_
 
 void compute_sxz(real* sxz, const real* __restrict__ mu, const real* __restrict__ del1,
                  const real* __restrict__ del2, const real dt,
-                 const int nx_ghost, const int ny_ghost, const int nz_ghost) {
+                 const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads) {
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = 0; k < nz_ghost - 1; k++) {
     for (int j = 0; j < ny_ghost; j++) {
       for (int i = 0; i < nx_ghost - 1; i++) {
@@ -111,9 +111,9 @@ void compute_sxz(real* sxz, const real* __restrict__ mu, const real* __restrict_
 void compute_sxx_syy_szz(real* sxx, real* syy, real* szz, const real* __restrict__ del1,
                          const real* __restrict__ del2, const real* __restrict__ del3,
                          const real* __restrict__ lambda, const real* __restrict__ mu,  const real dt,
-                         const int nx_ghost, const int ny_ghost, const int nz_ghost) {
+                         const int nx_ghost, const int ny_ghost, const int nz_ghost, const int nthreads) {
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = 0; k < nz_ghost; k++) {
     for (int j = 0; j < ny_ghost; j++) {
       for (int i = 0; i < nx_ghost; i++) {

@@ -25,16 +25,16 @@ constexpr int half_length = 8;
 constexpr real W[half_length] = {1.2627, -0.1312, 0.0412, -0.0170, 0.0076, -0.0034, 0.0014, -0.0005};
 
 // Differentiation for dimension one (innermost dimension)
-void dx_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale);
-void dx_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale);
+void dx_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads);
+void dx_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads);
 
 // Differentiation for dimension two (middle dimension)
-void dy_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale);
-void dy_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale);
+void dy_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads);
+void dy_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads);
 
 // Differentiation for dimension three (outer dimension)
-void dz_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale);
-void dz_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale);
+void dz_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads);
+void dz_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads);
 
 
 /* Weights to have if other operators are used... DO NOT REMOVE!

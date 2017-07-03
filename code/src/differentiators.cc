@@ -5,11 +5,11 @@
 
 #include "differentiators.h"
 
-void dx_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale) {
+void dx_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads) {
 
   zero_data(to, nx, ny, nz);
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = half_length; k < nz - half_length; k++) {
     for (int j = half_length; j < ny - half_length; j++) {
       for (int i = half_length; i < nx - half_length; i++) {
@@ -24,11 +24,11 @@ void dx_forward(real* to, const real* __restrict__ from, const int nx, const int
   }
 }
 
-void dx_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale) {
+void dx_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads) {
 
   zero_data(to, nx, ny, nz);
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = half_length; k < nz - half_length; k++) {
     for (int j = half_length; j < ny - half_length; j++) {
       for (int i = half_length; i < nx - half_length; i++) {
@@ -43,11 +43,11 @@ void dx_backward(real* to, const real* __restrict__ from, const int nx, const in
   }
 }
 
-void dy_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale) {
+void dy_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads) {
 
   zero_data(to, nx, ny, nz);
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = half_length; k < nz - half_length; k++) {
     for (int j = half_length; j < ny - half_length; j++) {
       for (int i = half_length; i < nx - half_length; i++) {
@@ -62,11 +62,11 @@ void dy_forward(real* to, const real* __restrict__ from, const int nx, const int
   }
 }
 
-void dy_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale) {
+void dy_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads) {
 
   zero_data(to, nx, ny, nz);
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = half_length; k < nz - half_length; k++) {
     for (int j = half_length; j < ny - half_length; j++) {
       for (int i = half_length; i < nx - half_length; i++) {
@@ -81,11 +81,11 @@ void dy_backward(real* to, const real* __restrict__ from, const int nx, const in
   }
 }
 
-void dz_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale) {
+void dz_forward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads) {
 
   zero_data(to, nx, ny, nz);
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = half_length; k < nz - half_length; k++) {
     for (int j = half_length; j < ny - half_length; j++) {
       for (int i = half_length; i < nx - half_length; i++) {
@@ -100,11 +100,11 @@ void dz_forward(real* to, const real* __restrict__ from, const int nx, const int
   }
 }
 
-void dz_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale) {
+void dz_backward(real* to, const real* __restrict__ from, const int nx, const int ny, const int nz, const real scale, const int nthreads) {
 
   zero_data(to, nx, ny, nz);
 
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int k = half_length; k < nz - half_length; k++) {
     for (int j = half_length; j < ny - half_length; j++) {
       for (int i = half_length; i < nx - half_length; i++) {

@@ -50,6 +50,8 @@ int main(int argc, char** argv) {
   int Ny = 0;
   int Nz = 0;
   int Nt = 0;
+  
+  int nthreads = 0; 
 
 #ifdef STATIC_DVFS
   uint64_t coref = 0;
@@ -74,6 +76,8 @@ int main(int argc, char** argv) {
   string_buffer >> Ny;
   string_buffer >> Nz;
   string_buffer >> Nt;
+  
+  string_buffer >> nthreads;
 #ifdef STATIC_DVFS
   string_buffer >> coref;
   string_buffer >> ucoref;
@@ -104,9 +108,10 @@ int main(int argc, char** argv) {
   const int z_source = waves->nz_ghost / 2;
   const int source_dir = 1; // Force in x-direction
 
+  omp_set_num_threads(nthreads);
   omp_set_dynamic(0);
 
-#pragma omp parallel for
+  #pragma omp parallel for num_threads(nthreads)
   for (int i = 0; i < Nt; i++) {
     real arg = kPI * kF0 * (kDt * i - kT0);
     arg = arg * arg;
@@ -180,7 +185,7 @@ int main(int argc, char** argv) {
     auto dxf_time_start = std::chrono::high_resolution_clock::now();
     auto dxf_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dx_forward(waves->del1, waves->sxx, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx);
+    dx_forward(waves->del1, waves->sxx, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx, nthreads);
 #ifdef DXF_HDEEM
     auto dxf_time_end = std::chrono::high_resolution_clock::now();
     double dxf_tstart = (double)dxf_timestamp.count();
@@ -197,7 +202,7 @@ int main(int argc, char** argv) {
     auto dzb_time_start = std::chrono::high_resolution_clock::now();
     auto dzb_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dz_backward(waves->del2, waves->sxz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz);
+    dz_backward(waves->del2, waves->sxz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz, nthreads);
 #ifdef DZB_HDEEM
     auto dzb_time_end = std::chrono::high_resolution_clock::now();
     double dzb_tstart = (double)dzb_timestamp.count();
@@ -215,7 +220,7 @@ int main(int argc, char** argv) {
     auto dyb_time_start = std::chrono::high_resolution_clock::now();
     auto dyb_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dy_backward(waves->del3, waves->sxy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy);
+    dy_backward(waves->del3, waves->sxy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy, nthreads);
 #ifdef DYB_HDEEM
     auto dyb_time_end = std::chrono::high_resolution_clock::now();
     double dyb_tstart = (double)dyb_timestamp.count();
@@ -233,7 +238,7 @@ int main(int argc, char** argv) {
     auto cvx_time_start = std::chrono::high_resolution_clock::now();
     auto cvx_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    compute_vx(waves->vx, model->rho, waves->del1, waves->del2, waves->del3, dt, nx_ghost, ny_ghost, nz_ghost);
+    compute_vx(waves->vx, model->rho, waves->del1, waves->del2, waves->del3, dt, nx_ghost, ny_ghost, nz_ghost, nthreads);
 #ifdef CVX_HDEEM
     auto cvx_time_end = std::chrono::high_resolution_clock::now();
     double cvx_tstart = (double)cvx_timestamp.count();
@@ -253,7 +258,7 @@ int main(int argc, char** argv) {
     auto dyf_time_start = std::chrono::high_resolution_clock::now();
     auto dyf_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dy_forward(waves->del1, waves->syy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy);
+    dy_forward(waves->del1, waves->syy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy, nthreads);
 #ifdef DYF_HDEEM
     auto dyf_time_end = std::chrono::high_resolution_clock::now();
     double dyf_tstart = (double)dyf_timestamp.count();
@@ -270,7 +275,7 @@ int main(int argc, char** argv) {
     auto dzb2_time_start = std::chrono::high_resolution_clock::now();
     auto dzb2_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dz_backward(waves->del2, waves->syz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz);
+    dz_backward(waves->del2, waves->syz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz, nthreads);
 #ifdef DZB2_HDEEM
     auto dzb2_time_end = std::chrono::high_resolution_clock::now();
     double dzb2_tstart = (double)dzb2_timestamp.count();
@@ -288,7 +293,7 @@ int main(int argc, char** argv) {
     auto dxb_time_start = std::chrono::high_resolution_clock::now();
     auto dxb_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dx_backward(waves->del3, waves->sxy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx);
+    dx_backward(waves->del3, waves->sxy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx, nthreads);
 #ifdef DXB_HDEEM
     auto dxb_time_end = std::chrono::high_resolution_clock::now();
     double dxb_tstart = (double)dxb_timestamp.count();
@@ -306,7 +311,7 @@ int main(int argc, char** argv) {
     auto cvy_time_start = std::chrono::high_resolution_clock::now();
     auto cvy_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    compute_vy(waves->vy, model->rho, waves->del1, waves->del2, waves->del3, dt, nx_ghost, ny_ghost, nz_ghost);
+    compute_vy(waves->vy, model->rho, waves->del1, waves->del2, waves->del3, dt, nx_ghost, ny_ghost, nz_ghost, nthreads);
 #ifdef CVY_HDEEM
     auto cvy_time_end = std::chrono::high_resolution_clock::now();
     double cvy_tstart = (double)cvy_timestamp.count();
@@ -326,7 +331,7 @@ int main(int argc, char** argv) {
     auto dzf_time_start = std::chrono::high_resolution_clock::now();
     auto dzf_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dz_forward(waves->del1, waves->szz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz);
+    dz_forward(waves->del1, waves->szz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz, nthreads);
 #ifdef DZF_HDEEM
     auto dzf_time_end = std::chrono::high_resolution_clock::now();
     double dzf_tstart = (double)dzf_timestamp.count();
@@ -344,7 +349,7 @@ int main(int argc, char** argv) {
     auto dxb2_time_start = std::chrono::high_resolution_clock::now();
     auto dxb2_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dx_backward(waves->del2, waves->sxz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx);
+    dx_backward(waves->del2, waves->sxz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx, nthreads);
 #ifdef DXB2_HDEEM
     auto dxb2_time_end = std::chrono::high_resolution_clock::now();
     double dxb2_tstart = (double)dxb2_timestamp.count();
@@ -362,7 +367,7 @@ int main(int argc, char** argv) {
     auto dyb2_time_start = std::chrono::high_resolution_clock::now();
     auto dyb2_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dy_backward(waves->del3, waves->syz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy);
+    dy_backward(waves->del3, waves->syz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy, nthreads);
 #ifdef DYB2_HDEEM
     auto dyb2_time_end = std::chrono::high_resolution_clock::now();
     double dyb2_tstart = (double)dyb2_timestamp.count();
@@ -380,7 +385,7 @@ int main(int argc, char** argv) {
     auto cvz_time_start = std::chrono::high_resolution_clock::now();
     auto cvz_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    compute_vz(waves->vz, model->rho, waves->del1, waves->del2, waves->del3, dt, nx_ghost, ny_ghost, nz_ghost);
+    compute_vz(waves->vz, model->rho, waves->del1, waves->del2, waves->del3, dt, nx_ghost, ny_ghost, nz_ghost, nthreads);
 #ifdef CVZ_HDEEM
     auto cvz_time_end = std::chrono::high_resolution_clock::now();
     double cvz_tstart = (double)cvz_timestamp.count();
@@ -400,7 +405,7 @@ int main(int argc, char** argv) {
     auto dzb3_time_start = std::chrono::high_resolution_clock::now();
     auto dzb3_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dz_backward(waves->del1, waves->vz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz);
+    dz_backward(waves->del1, waves->vz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz, nthreads);
 #ifdef DZB3_HDEEM
     auto dzb3_time_end = std::chrono::high_resolution_clock::now();
     double dzb3_tstart = (double)dzb3_timestamp.count();
@@ -418,7 +423,7 @@ int main(int argc, char** argv) {
     auto dxb3_time_start = std::chrono::high_resolution_clock::now();
     auto dxb3_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dx_backward(waves->del2, waves->vx, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx);
+    dx_backward(waves->del2, waves->vx, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx, nthreads);
 #ifdef DXB3_HDEEM
     auto dxb3_time_end = std::chrono::high_resolution_clock::now();
     double dxb3_tstart = (double)dxb3_timestamp.count();
@@ -436,7 +441,7 @@ int main(int argc, char** argv) {
     auto dyb3_time_start = std::chrono::high_resolution_clock::now();
     auto dyb3_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dy_backward(waves->del3, waves->vy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy);
+    dy_backward(waves->del3, waves->vy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy, nthreads);
 #ifdef DYB3_HDEEM
     auto dyb3_time_end = std::chrono::high_resolution_clock::now();
     double dyb3_tstart = (double)dyb3_timestamp.count();
@@ -455,7 +460,7 @@ int main(int argc, char** argv) {
     auto csxxsyyszz_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
     compute_sxx_syy_szz(waves->sxx, waves->syy, waves->szz, waves->del1, waves->del2, waves->del3,
-                        model->lambda, model->mu, dt, nx_ghost, ny_ghost, nz_ghost);
+                        model->lambda, model->mu, dt, nx_ghost, ny_ghost, nz_ghost, nthreads);
 #ifdef CSXXSYYSZZ_HDEEM
     auto csxxsyyszz_time_end = std::chrono::high_resolution_clock::now();
     double csxxsyyszz_tstart = (double)csxxsyyszz_timestamp.count();
@@ -475,7 +480,7 @@ int main(int argc, char** argv) {
     auto dyf2_time_start = std::chrono::high_resolution_clock::now();
     auto dyf2_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dy_forward(waves->del1, waves->vx, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy);
+    dy_forward(waves->del1, waves->vx, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy, nthreads);
 #ifdef DYF2_HDEEM
     auto dyf2_time_end = std::chrono::high_resolution_clock::now();
     double dyf2_tstart = (double)dyf2_timestamp.count();
@@ -493,7 +498,7 @@ int main(int argc, char** argv) {
     auto dxf2_time_start = std::chrono::high_resolution_clock::now();
     auto dxf2_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dx_forward(waves->del2, waves->vy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx);
+    dx_forward(waves->del2, waves->vy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx, nthreads);
 #ifdef DXF2_HDEEM
     auto dxf2_time_end = std::chrono::high_resolution_clock::now();
     double dxf2_tstart = (double)dxf2_timestamp.count();
@@ -511,7 +516,7 @@ int main(int argc, char** argv) {
     auto csxy_time_start = std::chrono::high_resolution_clock::now();
     auto csxy_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    compute_sxy(waves->sxy, model->mu, waves->del1, waves->del2, dt, nx_ghost, ny_ghost, nz_ghost);
+    compute_sxy(waves->sxy, model->mu, waves->del1, waves->del2, dt, nx_ghost, ny_ghost, nz_ghost, nthreads);
 #ifdef CSXY_HDEEM
     auto csxy_time_end = std::chrono::high_resolution_clock::now();
     double csxy_tstart = (double)csxy_timestamp.count();
@@ -531,7 +536,7 @@ int main(int argc, char** argv) {
     auto dzf2_time_start = std::chrono::high_resolution_clock::now();
     auto dzf2_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dz_forward(waves->del1, waves->vy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz);
+    dz_forward(waves->del1, waves->vy, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz, nthreads);
 #ifdef DZF2_HDEEM
     auto dzf2_time_end = std::chrono::high_resolution_clock::now();
     double dzf2_tstart = (double)dzf2_timestamp.count();
@@ -549,7 +554,7 @@ int main(int argc, char** argv) {
     auto dyf3_time_start = std::chrono::high_resolution_clock::now();
     auto dyf3_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dy_forward(waves->del2, waves->vz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy);
+    dy_forward(waves->del2, waves->vz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dy, nthreads);
 #ifdef DYF3_HDEEM
     auto dyf3_time_end = std::chrono::high_resolution_clock::now();
     double dyf3_tstart = (double)dyf3_timestamp.count();
@@ -567,7 +572,7 @@ int main(int argc, char** argv) {
     auto csyz_time_start = std::chrono::high_resolution_clock::now();
     auto csyz_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    compute_syz(waves->syz, model->mu, waves->del1, waves->del2, dt, nx_ghost, ny_ghost, nz_ghost);
+    compute_syz(waves->syz, model->mu, waves->del1, waves->del2, dt, nx_ghost, ny_ghost, nz_ghost, nthreads);
 #ifdef CSYZ_HDEEM
     auto csyz_time_end = std::chrono::high_resolution_clock::now();
     double csyz_tstart = (double)csyz_timestamp.count();
@@ -587,7 +592,7 @@ int main(int argc, char** argv) {
     auto dxf3_time_start = std::chrono::high_resolution_clock::now();
     auto dxf3_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dx_forward(waves->del1, waves->vz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx);
+    dx_forward(waves->del1, waves->vz, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dx, nthreads);
 #ifdef DXF3_HDEEM
     auto dxf3_time_end = std::chrono::high_resolution_clock::now();
     double dxf3_tstart = (double)dxf3_timestamp.count();
@@ -605,7 +610,7 @@ int main(int argc, char** argv) {
     auto dzf3_time_start = std::chrono::high_resolution_clock::now();
     auto dzf3_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    dz_forward(waves->del2, waves->vx, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz);
+    dz_forward(waves->del2, waves->vx, nx_ghost, ny_ghost, nz_ghost, 1.0f / waves->dz, nthreads);
 #ifdef DZF3_HDEEM
     auto dzf3_time_end = std::chrono::high_resolution_clock::now();
     double dzf3_tstart = (double)dzf3_timestamp.count();
@@ -623,7 +628,7 @@ int main(int argc, char** argv) {
     auto csxz_time_start = std::chrono::high_resolution_clock::now();
     auto csxz_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
 #endif
-    compute_sxz(waves->sxz, model->mu, waves->del1, waves->del2, dt, nx_ghost, ny_ghost, nz_ghost);
+    compute_sxz(waves->sxz, model->mu, waves->del1, waves->del2, dt, nx_ghost, ny_ghost, nz_ghost, nthreads);
 #ifdef CSXZ_HDEEM
     auto csxz_time_end = std::chrono::high_resolution_clock::now();
     double csxz_tstart = (double)csxz_timestamp.count();

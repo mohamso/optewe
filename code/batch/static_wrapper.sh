@@ -33,12 +33,11 @@ sh ${directory}/compile.sh "${INSTRUMENTATION}"
 
 for core in {25..12}; do
     for uncore in {30..12}; do
-        for thread in {8..8}; do
+        for thread in {24..2}; do
         file="${size}_${niterations}_c${core}_u${uncore}_t${thread}"
-        export OMP_NUM_THREADS=$thread
         export KMP_AFFINITY=granularity=fine,compact
         cd ${directory}/../bin/
-        ./optewe-mp ${size} ${size} ${size} ${niterations} ${core} ${uncore} 2 > ../batch/${folder}/${file}
+        ./optewe-mp ${size} ${size} ${size} ${niterations} ${core} ${uncore} ${thread} 2 > ../batch/${folder}/${file}
         cd ${directory}
         done
     done
