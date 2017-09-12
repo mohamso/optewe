@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Mohammed Sourouri <mohammed.sourouri@ntnu.no>
 # Date: January 16, 2017
-# Updated: March 26, 2017
+# Updated: September 12, 2017
 
 import sys
 import argparse
@@ -11,12 +11,16 @@ import matplotlib.pyplot as plt
 
 from utils import delete_ds_store, canonize, exists
 from sys_cfg import static_sys_cfgs, best_static_cfgs
+from matplotlib import rcParams
+
+# Set style
+plt.style.use('classic')
+rcParams['pdf.fonttype'] = 42
+rcParams['ps.fonttype'] = 42
 
 
 def barplot(objective, sys_cfgs, pcfg):
 
-    # Set style
-    plt.style.use('classic')
     ax = plt.figure(figsize=(10, 6)).add_subplot(111)
 
     data = []
@@ -46,8 +50,6 @@ def barplot(objective, sys_cfgs, pcfg):
 
 def lineplot(objective, sys_cfgs, pcfg):
 
-    # Set style
-    plt.style.use('classic')
     ax = plt.figure().add_subplot(111)
 
     for df in sys_cfgs:

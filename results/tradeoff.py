@@ -8,14 +8,18 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from matplotlib import rcParams
 from sys_cfg import static_sys_cfgs, best_static_cfg, dynamic_sys_cfgs, best_dynamic_sys_cfg, ideal_dyn_cfg
 from utils import delete_ds_store, exists, canonize
+
+# Set style
+plt.style.use('classic')
+rcParams['pdf.fonttype'] = 42
+rcParams['ps.fonttype'] = 42
 
 
 def barplot(objective, scale, data, avx_data, pcfg):
 
-    # Set style
-    plt.style.use('classic')
     f, ax = plt.subplots(figsize=(5, 5))
     labels = ["code", "reference", "static", "dynamic"]
 

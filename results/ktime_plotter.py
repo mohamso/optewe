@@ -6,13 +6,16 @@
 import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib import rcParams
 from sys_cfg import dynamic_sys_cfgs
+
+# Set style
+plt.style.use('classic')
+rcParams['pdf.fonttype'] = 42
+rcParams['ps.fonttype'] = 42
 
 
 def plot_ktimes(args, data):
-
-    # Set style
-    plt.style.use('classic')
 
     # Set up figure
     ax = plt.figure().add_subplot(111)
