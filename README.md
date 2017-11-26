@@ -133,4 +133,27 @@ compute_syz and compute_sxz functions are also called once. Each of these functi
 24 FLOPs (3 * 8 FLOPs) in total. Finally, the batched compute_sxx_syy_szz function is also called once,
 but performs 24 FLOPs. Thus, the total flop rate is: 108 + 21 + 24 + 24 = 177 FLOPs.
 
+## License and Citation
 
+OptEWE is released under the [BSD 3-Clause license](https://github.com/mohamso/optewe/blob/master/LICENSE).
+
+Please cite OptEWE in your publications if it helps your research:
+
+    @inproceedings{SourouriRRLHSK17,
+    author    = {Mohammed Sourouri and
+               Espen Birger Raknes and
+               Nico Reissmann and
+               Johannes Langguth and
+               Daniel Hackenberg and
+               Robert Sch{\"{o}}ne and
+               Per Gunnar Kjeldsberg},
+               title     = {Towards fine-grained dynamic tuning of {HPC} applications on modern
+               multi-core architectures},
+               booktitle = {Proceedings of the International Conference for High Performance Computing,
+               Networking, Storage and Analysis, {SC} 2017, Denver, CO, USA, November
+               12 - 17, 2017},
+               pages     = {41:1--41:12},
+               year      = {2017},
+               url       = {http://doi.acm.org/10.1145/3126908.3126945},
+               doi       = {10.1145/3126908.3126945}
+               }
