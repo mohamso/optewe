@@ -136,13 +136,13 @@ but performs 24 FLOPs. Thus, the total flop rate is: 108 + 21 + 24 + 24 = 177 FL
 ## Verification
 
 There are at least _three_ ways to verify the correctness of the simulation.
-By visual examination or by checking the output of the simulation with the serial version that is known to be correct.
+By visual examination, by comparing the output of the simulation with the output of the serial version or by comparing the solution with an analytical solution (not shown here).
 
-In order to check the correctness using visual examination, make sure to compile using the following macro ```-DHAVE_VISUALIZE=ON```. At the end of a successful run, the code will output a ```.vtk``` file of the code, which can be imported and visualized using for example [Paraview](http://paraview.org).
+In order to check the correctness using visual examination, make sure to compile the code using the following macro ```-DHAVE_VISUALIZE=ON```. At the end of a successful run, the code will output a ```.vtk``` file. Use a visualization tool such as [Paraview](http://paraview.org) to import the generated ```.vtk``` file.
 
-Unless you are an expert on geophysics, verification by visual examination can be a tedious process involving large files. Alternatively, you can verify the correctness of the solution using a Python script that checks the output of the simulation against solution file in ```.csv``` format that are generated when running the code with a single OpenMP thread. 
+Unless you are an expert geophysicist, verification by visual examination can be a tedious process involving large files. A faster way to verify the correctness of the solution is to use a tool like ```vimdiff``` to compare the generated receiver file with a receiver generated when running the code using a single OpenMP thread.
 
-To generate a solution file, compile the code with the following macro ```-DSAVE_RECEIVERS=ON``` and then run the code using a single OpenMP thread ```export OMP_NUM_THREADS=1```. Next, rename the file and run the code using the desired number of OpenMP threads. Now, use a tool such as ```vimdiff``` to verify the correctness of ```.csv``` file from the parallel code with the serial code. If the files are identical, your parallel solution is correct.
+To generate a receiver file, compile the code with the following macro ```-DSAVE_RECEIVERS=ON``` and run the code using a single OpenMP thread by setting ```export OMP_NUM_THREADS=1```. Next, rename the file and run the code using the desired number of OpenMP threads. Now, use for example ```vimdiff``` to verify the correctness of ```.csv``` file from the parallel code with the serial code. If the files are identical, your parallel solution is correct.
 
 ## License and Citation
 
